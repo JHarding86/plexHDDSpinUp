@@ -1,0 +1,3 @@
+<p><a role="button" href="{{ auth_url }}" target="_blank" rel="noopener">Open Plex sign-in ↗</a></p>
+<p class="muted">Approve Spinup in the new tab, then come back here. This page updates on its own.</p>
+{% with pin_id = pin.id %}{% include "partials/plex_pin_waiting.html" %}{% endwith %}

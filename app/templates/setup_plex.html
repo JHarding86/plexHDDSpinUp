@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Setup</h2>
+{% include "_steps.html" %}
+<article>
+  <h3>Connect to Plex</h3>
+  {% if s.plex_token %}
+  <p>✅ Connected to <strong>{{ s.plex_server_name }}</strong> at <span class="mono">{{ s.plex_url }}</span>.</p>
+  <div class="grid">
+    <a role="button" href="{{ url_for('ui.setup_step', step='libraries') }}">Continue</a>
+    <form method="post" action="{{ url_for('ui.reset_plex') }}" class="inline"><button class="secondary outline">Connect a different server</button></form>
+  </div>
+  {% else %}
+  <p>Sign in with your Plex account, then pick which server to use.</p>
+  <div id="plex-auth">
+    <button hx-post="{{ url_for('ui.plex_pin') }}" hx-target="#plex-auth" hx-swap="innerHTML">Sign in with Plex</button>
+  </div>
+  <details>
+    <summary>Or enter the server URL and token manually</summary>
+    <form method="post" action="{{ url_for('ui.plex_manual') }}">
+      <label>Server URL <input name="url" placeholder="http://192.168.1.20:32400" required></label>
+      <label>X-Plex-Token <input name="token" required></label>
+      <small><a href="https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/" target="_blank" rel="noopener">How to find your token</a></small>
+      <button type="submit">Test and save</button>
+    </form>
+  </details>
+  {% endif %}
+</article>
+{% endblock %}

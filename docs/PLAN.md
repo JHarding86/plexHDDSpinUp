@@ -17,7 +17,7 @@ Plex ──POST /webhook/<secret>──▶ spinup (Unraid, host port 9876)
   media.scrobble(ep) → find next episode  → wake its file
 Plex websocket (optional 2nd trigger) ──▶ same pipeline, debounced
 ```
-Wake pipeline: Plex `/library/metadata/<key>` → `Part@file` → prefix path map (Plex VM path → `/mnt/user/...`) → **resolve physical disk** by checking `/mnt/disk*/<relpath>` (and `/mnt/cache*`, `/mnt/<pool>` → skip because it's SSD) → read 2–3 × 4 KiB blocks at **random offsets with `O_DIRECT`** on the `/mnt/diskN` path. This bypasses Unraid's page cache, so the read is guaranteed to hit the platter. It falls back to buffered random-offset reads via `/mnt/user` if `O_DIRECT` fails. Each read is timed: over ~1s means the disk was asleep.
+Wake pipeline: Plex `/library/metadata/<key>` → `Part@file` → prefix path map (Plex VM path → `/mnt/user/...`) → **resolve physical disk** via shfs's `system.LOCATION` xattr on the `/mnt/user` path (no probing of other disks, which could wake them) → read 2–3 × 4 KiB blocks at **random offsets with `O_DIRECT`** on the `/mnt/diskN` path. This bypasses Unraid's page cache, so the read is guaranteed to hit the platter. It falls back to buffered random-offset reads via `/mnt/user` if `O_DIRECT` fails. Each read is timed: over ~1s means the disk was asleep.
 
 Debounce: skip any disk woken within the last N seconds (default 120). The webhook returns 200 immediately and the work runs on a `ThreadPoolExecutor`.
 
@@ -28,7 +28,7 @@ Debounce: skip any disk woken within the last N seconds (default 120). The webho
 - Setting: lookahead count (default 1; allow 2 for heavy bingers).
 
 ## Other nice-to-haves
-- **Disk status panel:** mount Unraid's `/var/local/emhttp/disks.ini` read-only and parse each disk's `spundown`, `name` and `device` to show live spin state on the dashboard, plus which disk each event hit.
+- **Disk status panel:** mount Unraid's `/var/local/emhttp` directory read-only (a single-file bind goes stale when Unraid rewrites `disks.ini`) and parse each disk's `spundown`, `name` and `device` to show live spin state on the dashboard, plus which disk each event hit.
 - **Plex websocket trigger** (`ws://<plex>:32400/:/websockets/notifications`, `websocket-client`): `PlaySessionStateNotification` state=playing → same pipeline. It's often faster than webhooks and works without Plex Pass. Toggle in settings. It runs as one background thread started once in the app factory (safe because gunicorn runs a single worker).
 - **Unraid template:** `unraid/spinup.xml` for "Add Container" (port, `/config`, `/mnt` ro-slave, disks.ini, PUID 99/PGID 100), plus a README section on installing it.
 
@@ -53,7 +53,7 @@ Debounce: skip any disk woken within the last N seconds (default 120). The webho
 - `unraid/spinup.xml`, `README.md`
 
 ## Container on Unraid
-Volumes: `/mnt/user/appdata/spinup:/config` · `/mnt:/mnt:ro,rslave` (rslave so disk mounts appear even if the array starts after the container) · `/var/local/emhttp/disks.ini:/unraid/disks.ini:ro`. Port 9876. Env: `PUID=99 PGID=100 TZ`. GHCR package is private by default. The README covers either making the package public (code isn't sensitive) or running a one-time `docker login ghcr.io` on Unraid with a read-only PAT.
+Volumes: `/mnt/user/appdata/spinup:/config` · `/mnt:/mnt:ro,rslave` (rslave so disk mounts appear even if the array starts after the container) · `/var/local/emhttp:/unraid:ro`. Port 9876. Env: `PUID=99 PGID=100 TZ`. GHCR package is private by default. The README covers either making the package public (code isn't sensitive) or running a one-time `docker login ghcr.io` on Unraid with a read-only PAT.
 
 ## Verification
 1. `pytest` passes locally and in Actions. `docker build` + `docker run` locally, with a fake `/mnt/disk1..3` tree and a sample disks.ini → wizard loads and `/healthz` is OK.

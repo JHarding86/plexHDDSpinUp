@@ -1,0 +1,24 @@
+<section class="stats">
+  <article><div class="num">{{ stats.total }}</div><div class="lbl">wakes today</div></article>
+  <article><div class="num">{{ stats.cold }}</div><div class="lbl">disks were asleep</div></article>
+  <article><div class="num">{{ '%.1fs'|format(stats.avg_cold_ms / 1000) if stats.avg_cold_ms else '–' }}</div><div class="lbl">avg spin-up hidden</div></article>
+  <article>
+    <div class="num" style="font-size:1.1rem; padding-top:.5rem">
+      {{ 'On' if s.next_episode_enabled else 'Off' }} · WS {{ ws_status }}
+    </div>
+    <div class="lbl">next-episode · websocket</div>
+  </article>
+</section>
+{% if disks is not none %}
+<h3>Disks</h3>
+<div class="disks">
+  {% for d in disks %}
+  <div class="disk {{ 'asleep' if d.asleep }}" title="{{ d.device }} · {{ d.status }}">
+    <span class="dot"></span><strong>{{ d.name }}</strong>
+    <div class="meta">{{ 'standby' if d.asleep else 'spinning' if d.rotational else 'active' }}{% if d.temp %} · {{ d.temp }}°C{% endif %}</div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="muted"><small>Disk status unavailable. Mount <span class="mono">/var/local/emhttp</span> to <span class="mono">/unraid</span> (read-only) to show spin state.</small></p>
+{% endif %}

@@ -1,0 +1,20 @@
+# Example for Unraid's Compose Manager plugin. The Unraid template in
+# unraid/spinup.xml sets up the same thing through the normal Docker tab.
+services:
+  spinup:
+    image: ghcr.io/jharding86/plexhddspinup:latest
+    container_name: spinup
+    restart: unless-stopped
+    ports:
+      - "9876:9876"
+    environment:
+      PUID: "99"
+      PGID: "100"
+      TZ: America/Chicago
+    volumes:
+      - /mnt/user/appdata/spinup:/config
+      # Read-only view of the array. rslave makes disks mounted after the
+      # container starts (array start) visible inside it.
+      - /mnt:/mnt:ro,rslave
+      # Unraid's live disk state (spun up / standby) for the dashboard.
+      - /var/local/emhttp:/unraid:ro

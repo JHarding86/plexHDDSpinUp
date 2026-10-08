@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Setup</h2>
+{% include "_steps.html" %}
+<article>
+  <h3>Point Plex at Spinup</h3>
+  {% include "_webhook_url.html" %}
+  <ol>
+    <li>Open Plex Web → <strong>Settings</strong> → (your account) <strong>Webhooks</strong>. Webhooks need Plex Pass.</li>
+    <li>Click <strong>Add Webhook</strong>, paste the URL above, and click <strong>Save Changes</strong>.</li>
+    <li>Play anything in Plex. The indicator below turns green when the first event arrives.</li>
+  </ol>
+  <div hx-get="{{ url_for('ui.webhook_status') }}" hx-trigger="load, every 3s">
+    {% include "partials/webhook_status.html" %}
+  </div>
+  <p class="muted"><small>No Plex Pass? Turn on the Plex websocket trigger in Settings after finishing. It wakes disks on play without webhooks.</small></p>
+</article>
+<form method="post" action="{{ url_for('ui.setup_finish') }}"><button type="submit">Finish setup</button></form>
+{% endblock %}

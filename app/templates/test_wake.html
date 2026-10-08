@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Test wake · Spinup{% endblock %}
+{% block content %}
+<h2>Test wake</h2>
+<p class="muted">Search your Plex library and wake the disk holding a title. Best tried on a disk that's in standby: a "cold" result taking several seconds shows that's the latency a preroll will now hide.</p>
+<input type="search" name="q" placeholder="Search movies and episodes…" autofocus
+       hx-get="{{ url_for('ui.test_search') }}" hx-trigger="input changed delay:400ms, search" hx-target="#results">
+<div id="results"></div>
+{% endblock %}

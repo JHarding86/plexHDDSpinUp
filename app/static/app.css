@@ -1,0 +1,40 @@
+:root { --pico-font-size: 100%; }
+.brand { font-weight: 700; text-decoration: none; }
+form.inline { display: inline; margin: 0; }
+button.small, a.small[role=button] { padding: .25rem .7rem; font-size: .85rem; width: auto; margin: 0; }
+
+.flash { padding: .6rem .9rem; border-radius: var(--pico-border-radius); }
+.flash.ok { background: color-mix(in srgb, #2e9d5b 18%, transparent); }
+.flash.error { background: color-mix(in srgb, #d0443b 20%, transparent); }
+
+.steps { display: flex; gap: .4rem; flex-wrap: wrap; list-style: none; padding: 0; margin-bottom: 1.5rem; }
+.steps li { list-style: none; padding: .3rem .8rem; border-radius: 999px; font-size: .85rem;
+  border: 1px solid var(--pico-muted-border-color); color: var(--pico-muted-color); }
+.steps li.current { border-color: var(--pico-primary); color: var(--pico-primary); font-weight: 600; }
+.steps li a { text-decoration: none; color: inherit; }
+
+.badge { display: inline-block; padding: .05rem .5rem; border-radius: 999px; font-size: .78rem;
+  font-weight: 600; white-space: nowrap; border: 1px solid currentColor; }
+.s-cold { color: #2f7de1; } .s-warm { color: #2e9d5b; } .s-debounced, .s-skipped { color: var(--pico-muted-color); }
+.s-error, .s-notfound { color: #d0443b; }
+.t-badge { color: var(--pico-muted-color); }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.stats article { margin: 0; padding: 1rem; text-align: center; }
+.stats .num { font-size: 1.9rem; font-weight: 700; line-height: 1.1; }
+.stats .lbl { font-size: .8rem; color: var(--pico-muted-color); }
+
+.disks { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: .5rem; }
+.disk { border: 1px solid var(--pico-muted-border-color); border-radius: var(--pico-border-radius); padding: .5rem .7rem; font-size: .85rem; }
+.disk .dot { display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; margin-right: .35rem; background: #2e9d5b; }
+.disk.asleep .dot { background: var(--pico-muted-border-color); }
+.disk .meta { color: var(--pico-muted-color); font-size: .75rem; }
+
+.events { font-size: .88rem; }
+.events td { vertical-align: top; }
+.events .path { color: var(--pico-muted-color); font-size: .75rem; word-break: break-all; }
+.mono { font-family: var(--pico-font-family-monospace); font-size: .85rem; word-break: break-all; }
+.copy-row { display: flex; gap: .5rem; align-items: center; }
+.copy-row code { flex: 1; padding: .6rem; overflow-wrap: anywhere; }
+.muted { color: var(--pico-muted-color); }
+.table-wrap { overflow-x: auto; }

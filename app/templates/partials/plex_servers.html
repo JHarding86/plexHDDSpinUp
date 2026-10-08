@@ -1,0 +1,16 @@
+<p>✅ Signed in. Choose a server and a connection address.</p>
+{% for srv in servers %}
+<form method="post" action="{{ url_for('ui.plex_select') }}">
+  <input type="hidden" name="server" value="{{ srv.name }}">
+  <fieldset>
+    <legend><strong>{{ srv.name }}</strong></legend>
+    {% for u in srv.urls %}
+    <label><input type="radio" name="url" value="{{ u.url }}" {{ 'checked' if loop.first }}>
+      <span class="mono">{{ u.url }}</span> {% if u.local %}<span class="badge s-warm">LAN</span>{% endif %}</label>
+    {% endfor %}
+  </fieldset>
+  <button type="submit">Use {{ srv.name }}</button>
+</form>
+{% else %}
+<p class="flash error">No Plex servers found on this account.</p>
+{% endfor %}

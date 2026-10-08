@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Settings · Spinup{% endblock %}
+{% block content %}
+<h2>Settings</h2>
+<form method="post">
+  <article>
+    <h4>Triggers</h4>
+    <fieldset>
+      <label><input type="checkbox" name="media.play" {{ 'checked' if 'media.play' in s.events }}> Wake on <strong>play</strong> (covers the preroll window)</label>
+      <label><input type="checkbox" name="media.resume" {{ 'checked' if 'media.resume' in s.events }}> Wake on <strong>resume</strong> (after a long pause the disk may have spun down)</label>
+      <label><input type="checkbox" role="switch" name="websocket_enabled" {{ 'checked' if s.websocket_enabled }}>
+        Also listen to the Plex websocket <small class="muted">(fires immediately, no Plex Pass needed)</small></label>
+    </fieldset>
+  </article>
+  <article>
+    <h4>Next TV episode</h4>
+    <fieldset>
+      <label><input type="checkbox" role="switch" name="next_episode_enabled" {{ 'checked' if s.next_episode_enabled }}>
+        Warm the next episode's disk at ~90% watched <small class="muted">(media.scrobble)</small></label>
+      <label><input type="checkbox" name="next_on_play" {{ 'checked' if s.next_on_play }}> Also warm it when an episode starts</label>
+      <label>Episodes ahead <input type="number" name="next_episode_lookahead" min="1" max="5" value="{{ s.next_episode_lookahead }}"></label>
+    </fieldset>
+  </article>
+  <article>
+    <h4>Filters</h4>
+    <label>Only these Plex users <small class="muted">(comma-separated; blank = everyone)</small>
+      <input name="allowed_users" value="{{ s.allowed_users|join(', ') }}"></label>
+    <label>Only these players <small class="muted">(comma-separated; blank = all)</small>
+      <input name="allowed_players" value="{{ s.allowed_players|join(', ') }}"></label>
+    <p><small>Libraries: <a href="{{ url_for('ui.setup_step', step='libraries') }}">choose monitored libraries</a></small></p>
+  </article>
+  <article>
+    <h4>Read behaviour</h4>
+    <div class="grid">
+      <label>Debounce per disk (s) <input type="number" name="debounce_seconds" min="0" max="3600" value="{{ s.debounce_seconds }}"></label>
+      <label>Blocks to read <input type="number" name="read_blocks" min="1" max="16" value="{{ s.read_blocks }}"></label>
+      <label>Block size (bytes) <input type="number" name="block_size" min="512" step="512" value="{{ s.block_size }}"></label>
+      <label>"Cold" threshold (ms) <input type="number" name="cold_threshold_ms" min="50" value="{{ s.cold_threshold_ms }}"></label>
+    </div>
+  </article>
+  <button type="submit">Save settings</button>
+</form>
+
+<article>
+  <h4>Webhook</h4>
+  {% include "_webhook_url.html" %}
+  <form method="post" action="{{ url_for('ui.regenerate_secret') }}" onsubmit="return confirm('Generate a new URL? The old one stops working immediately.')">
+    <button class="outline secondary small" style="margin-top:.8rem">Generate new URL</button>
+  </form>
+</article>
+
+<article>
+  <h4>Path mapping</h4>
+  {% include "_path_maps.html" %}
+  <small><a href="{{ url_for('ui.setup_step', step='paths') }}">Check mappings against Plex →</a></small>
+</article>
+
+<article>
+  <h4>Plex</h4>
+  <p>Connected to <strong>{{ s.plex_server_name or '–' }}</strong> at <span class="mono">{{ s.plex_url or '–' }}</span></p>
+  <div class="grid">
+    <form method="post" action="{{ url_for('ui.reset_plex') }}" onsubmit="return confirm('Disconnect from Plex and run the sign-in again?')"><button class="outline secondary">Reconnect Plex</button></form>
+    <a role="button" class="outline secondary" href="{{ url_for('ui.setup_password') }}">Change password</a>
+  </div>
+</article>
+{% endblock %}

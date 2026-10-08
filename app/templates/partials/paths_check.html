@@ -1,0 +1,19 @@
+{% if error %}<p class="flash error">{{ error }}</p>{% endif %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Library</th><th>Sample file</th><th>Result</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td>{{ r.library }}</td>
+      <td><div class="mono">{{ r.plex_path }}</div>{% if r.local and r.local != r.plex_path %}<div class="mono muted">→ {{ r.local }}</div>{% endif %}</td>
+      <td>
+        {% if r.ok %}<span class="badge s-warm">✓ found</span>{% if r.disk %} on <strong>{{ r.disk }}</strong>{% endif %}
+        {% elif r.ok is none %}<span class="muted">n/a</span>
+        {% else %}<span class="badge s-error">✗ not found</span>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>

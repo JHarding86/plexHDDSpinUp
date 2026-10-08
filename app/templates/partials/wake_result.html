@@ -1,0 +1,10 @@
+{% for r in rows %}
+<p>
+  <span class="badge s-{{ r.status }}">{{ r.status }}</span>
+  {% if r.read_ms is not none %}<strong>{{ '%.2fs'|format(r.read_ms / 1000) }}</strong>{% endif %}
+  {% if r.disk %} on <strong>{{ r.disk }}</strong>{% endif %}
+  {% if r.title %} · {{ r.title }}{% endif %}
+  <br><small class="mono muted">{{ r.local_path or '' }}</small>
+  {% if r.message %}<br><small class="muted">{{ r.message }}</small>{% endif %}
+</p>
+{% endfor %}

@@ -1,0 +1,5 @@
+{% if last %}
+<p class="flash ok">✅ Received <strong>{{ last.event }}</strong> at {{ last.ts|ts }}.</p>
+{% else %}
+<p aria-busy="true" class="muted">Waiting for the first webhook from Plex…</p>
+{% endif %}

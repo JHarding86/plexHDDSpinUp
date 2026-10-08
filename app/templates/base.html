@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Spinup{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='pico.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  <script src="{{ url_for('static', filename='htmx.min.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <header class="container">
+    <nav>
+      <ul><li><a href="{{ url_for('ui.index') }}" class="brand">⏻ Spinup</a></li></ul>
+      {% if authed %}
+      <ul>
+        {% if setup_complete %}
+        <li><a href="{{ url_for('ui.dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('ui.test_wake') }}">Test wake</a></li>
+        <li><a href="{{ url_for('ui.settings') }}">Settings</a></li>
+        {% endif %}
+        <li><form method="post" action="{{ url_for('ui.logout') }}" class="inline"><button class="outline secondary small">Log out</button></form></li>
+      </ul>
+      {% endif %}
+    </nav>
+  </header>
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in messages %}<p class="flash {{ cat }}">{{ msg }}</p>{% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

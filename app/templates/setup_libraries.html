@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Setup</h2>
+{% include "_steps.html" %}
+<article>
+  <h3>Which libraries should wake disks?</h3>
+  {% if error %}<p class="flash error">{{ error }}</p>{% endif %}
+  <form method="post" action="{{ url_for('ui.setup_libraries_save') }}">
+    <input type="hidden" name="total" value="{{ sections|length }}">
+    {% for sec in sections %}
+    <label>
+      <input type="checkbox" name="library" value="{{ sec.id }}" {{ 'checked' if not selected or sec.id in selected }}>
+      <strong>{{ sec.title }}</strong> <span class="muted">({{ sec.type }})</span>
+      <br><small class="mono muted">{{ sec.locations|join(', ') }}</small>
+    </label>
+    {% else %}
+    <p class="muted">No movie or TV libraries found.</p>
+    {% endfor %}
+    <button type="submit">Save and continue</button>
+  </form>
+</article>
+{% endblock %}

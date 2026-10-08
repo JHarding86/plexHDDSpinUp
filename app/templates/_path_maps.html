@@ -1,0 +1,26 @@
+{% set back = request.path %}
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Plex path</th><th>Unraid path (in container)</th><th></th></tr></thead>
+  <tbody>
+    {% for m in maps %}
+    <tr>
+      <td class="mono">{{ m.plex_prefix }}</td>
+      <td class="mono">{{ m.local_prefix }}</td>
+      <td><form method="post" action="{{ url_for('ui.paths_delete', map_id=m.id) }}" class="inline">
+        <input type="hidden" name="back" value="{{ back }}"><button class="outline secondary small">Remove</button></form></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="3" class="muted">No mappings yet. Paths are used as-is.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<form method="post" action="{{ url_for('ui.paths_add') }}">
+  <input type="hidden" name="back" value="{{ back }}">
+  <div class="grid">
+    <input name="plex_prefix" placeholder="/data/movies" required>
+    <input name="local_prefix" placeholder="/mnt/user/media/movies" required>
+    <button type="submit">Add mapping</button>
+  </div>
+</form>
