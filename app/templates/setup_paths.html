@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Setup</h2>
+{% include "_steps.html" %}
+<article>
+  <h3>Path mapping</h3>
+  <p class="muted">Plex runs on another machine, so its file paths differ from Unraid's. Map each Plex folder to where it lives under <span class="mono">{{ mnt_root }}/user</span>.</p>
+  {% include "_path_maps.html" %}
+  <form method="post" action="{{ url_for('ui.paths_suggest') }}" class="inline">
+    <button class="secondary outline small">Suggest from Plex libraries</button>
+  </form>
+</article>
+<article>
+  <h4>Check</h4>
+  <p class="muted">Takes one real file from each library and checks that this container can see it.</p>
+  <div hx-get="{{ url_for('ui.paths_check') }}" hx-trigger="load" id="paths-check"><p aria-busy="true">Checking…</p></div>
+  <button class="secondary outline small" hx-get="{{ url_for('ui.paths_check') }}" hx-target="#paths-check">Re-check</button>
+</article>
+<a role="button" href="{{ url_for('ui.setup_step', step='webhook') }}">Continue</a>
+{% endblock %}

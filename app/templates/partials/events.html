@@ -1,0 +1,28 @@
+{% if events %}
+<div class="table-wrap">
+<table class="events striped">
+  <thead><tr><th>Time</th><th>Trigger</th><th>Title</th><th>Disk</th><th>Result</th></tr></thead>
+  <tbody>
+  {% for e in events %}
+    <tr>
+      <td>{{ e.ts|ts }}</td>
+      <td><span class="badge t-badge">{{ e.trigger }}</span></td>
+      <td>
+        {{ e.title or '–' }}
+        {% if e.user or e.player %}<div class="path">{{ e.user or '' }}{% if e.user and e.player %} · {% endif %}{{ e.player or '' }}</div>{% endif %}
+        {% if e.local_path %}<div class="path">{{ e.local_path }}</div>{% endif %}
+      </td>
+      <td>{{ e.disk or '–' }}</td>
+      <td>
+        <span class="badge s-{{ e.status }}" title="{{ e.message or '' }}">{{ e.status }}</span>
+        {% if e.read_ms is not none %}<div class="path">{{ '%.2fs'|format(e.read_ms / 1000) if e.read_ms >= 1000 else '%d ms'|format(e.read_ms) }}</div>{% endif %}
+        {% if e.status in ('error', 'notfound', 'skipped', 'debounced') and e.message %}<div class="path">{{ e.message }}</div>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="muted">No activity yet. Play something in Plex, or use <a href="{{ url_for('ui.test_wake') }}">Test wake</a>.</p>
+{% endif %}

@@ -1,0 +1,8 @@
+<ol class="steps">
+  {% for key, label in steps %}
+  <li class="{{ 'current' if key == step }}">
+    {% if authed or key == 'password' %}<a href="{{ url_for('ui.setup_step', step=key) }}">{{ loop.index }}. {{ label }}</a>
+    {% else %}{{ loop.index }}. {{ label }}{% endif %}
+  </li>
+  {% endfor %}
+</ol>

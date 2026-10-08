@@ -1,0 +1,16 @@
+{% for item in items %}
+<article>
+  <div class="grid">
+    <div><strong>{{ describe(item) }}</strong> <span class="muted">({{ item.type }})</span></div>
+    <div style="text-align:right">
+      <button class="small" hx-post="{{ url_for('ui.test_wake_run', rating_key=item.ratingKey) }}" hx-target="#r-{{ item.ratingKey }}">Wake disk</button>
+      {% if item.type == 'episode' %}
+      <button class="small secondary" hx-post="{{ url_for('ui.test_wake_next', rating_key=item.ratingKey) }}" hx-target="#r-{{ item.ratingKey }}">Wake next episode</button>
+      {% endif %}
+    </div>
+  </div>
+  <div id="r-{{ item.ratingKey }}"></div>
+</article>
+{% else %}
+<p class="muted">No movies or episodes found.</p>
+{% endfor %}

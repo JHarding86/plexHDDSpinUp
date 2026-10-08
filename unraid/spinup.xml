@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>spinup</Name>
+  <Repository>ghcr.io/jharding86/plexhddspinup:latest</Repository>
+  <Registry>https://github.com/JHarding86/plexHDDSpinUp/pkgs/container/plexhddspinup</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/JHarding86/plexHDDSpinUp</Support>
+  <Project>https://github.com/JHarding86/plexHDDSpinUp</Project>
+  <Overview>Wakes the one array disk holding whatever Plex is about to play, so the drive spins up during the preroll instead of stalling the movie. Also pre-warms the next TV episode's disk. Web UI for setup and live activity.</Overview>
+  <Category>MediaServer:Video Tools:</Category>
+  <WebUI>http://[IP]:[PORT:9876]/</WebUI>
+  <TemplateURL/>
+  <Icon>https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/plex.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <Config Name="Web UI / webhook port" Target="9876" Default="9876" Mode="tcp" Description="Web UI, and the port Plex sends webhooks to." Type="Port" Display="always" Required="true" Mask="false">9876</Config>
+  <Config Name="Config" Target="/config" Default="/mnt/user/appdata/spinup" Mode="rw" Description="Settings database and activity log." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/spinup</Config>
+  <Config Name="Array (read-only)" Target="/mnt" Default="/mnt" Mode="ro,slave" Description="Read-only view of /mnt so Spinup can read the exact /mnt/diskN holding a file. Keep RO/Slave." Type="Path" Display="always" Required="true" Mask="false">/mnt</Config>
+  <Config Name="Unraid disk state (read-only)" Target="/unraid" Default="/var/local/emhttp" Mode="ro" Description="Lets the dashboard show which disks are spun up. Optional." Type="Path" Display="advanced" Required="false" Mask="false">/var/local/emhttp</Config>
+  <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
+  <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
+  <Config Name="TZ" Target="TZ" Default="America/Chicago" Mode="" Description="Timezone for the activity log." Type="Variable" Display="advanced" Required="false" Mask="false">America/Chicago</Config>
+</Container>
